@@ -1,0 +1,14 @@
+# Explicit working-tree endings override each contributor's core.autocrlf.
+# Git stores text files with LF in the index.
+* text=auto eol=lf
+
+# Preserve the Windows line endings of the original vendor/template files.
+**/Start/** text eol=crlf
+**/Library/** text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Firmware and archives must never undergo text conversion.
+*.bin binary
+*.axf binary
+*.zip binary

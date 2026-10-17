@@ -1,0 +1,9 @@
+build/
+Objects/
+Listings/
+DebugConfig/
+dist/
+*.uvguix.*
+*.uvoptx
+*.bak
+__pycache__/
