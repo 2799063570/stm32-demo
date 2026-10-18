@@ -1,6 +1,7 @@
-﻿#ifndef __SERIAL_H
+#ifndef __SERIAL_H
 #define __SERIAL_H
 #include "stm32f10x.h"
+void led_init(void);
 void Serial_Init(void);
 void Serial_SendByte(uint8_t Byte);
 void Serial_SendString(const char *String);

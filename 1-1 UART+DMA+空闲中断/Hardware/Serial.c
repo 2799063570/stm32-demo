@@ -1,4 +1,4 @@
-﻿#include "stm32f10x.h"                  // Device header
+#include "stm32f10x.h"                  // Device header
 #include "Serial.h"
 #include "Delay.h"
 #include <stdio.h>
@@ -38,6 +38,15 @@ static void Serial_CollectDMA(void)
 	}
 }
 
+void led_init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE); 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+}
 /**
   * 函    数：USART1、DMA发送、循环DMA接收与空闲中断初始化
   * 参    数：无
@@ -50,7 +59,7 @@ void Serial_Init(void)
 	DMA_InitTypeDef DMA_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	/*开启时钟*/
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE); 
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 	/*GPIO初始化*/
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;

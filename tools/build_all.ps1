@@ -2,7 +2,7 @@ param([string]$UV4 = 'D:\MGK-ARM\UV4\UV4.exe')
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 if (-not (Test-Path -LiteralPath $UV4)) { throw 'Pass the path to Keil UV4.exe with -UV4.' }
-$projects = Get-ChildItem -LiteralPath $repoRoot -Directory | Where-Object { $_.Name -match '^[1-5]-1 ' } | Sort-Object Name
+$projects = Get-ChildItem -LiteralPath $repoRoot -Directory | Where-Object { $_.Name -match '^\d+-1 ' } | Sort-Object Name
 foreach ($project in $projects) {
     $process = Start-Process -FilePath $UV4 -ArgumentList @('-r','Project.uvprojx','-j0','-o','Objects\Build.log') -WorkingDirectory $project.FullName -WindowStyle Hidden -PassThru
     if (-not $process.WaitForExit(45000)) { throw "Build timed out: $($project.Name)" }

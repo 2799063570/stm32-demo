@@ -134,7 +134,7 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>4100</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
@@ -451,6 +451,16 @@
               <FilePath>.\Library\stm32f10x_rcc.h</FilePath>
             </File>
             <File>
+              <FileName>stm32f10x_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\stm32f10x_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Library\stm32f10x_spi.h</FilePath>
+            </File>
+            <File>
               <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Library\stm32f10x_usart.c</FilePath>
@@ -510,6 +520,36 @@
         <Group>
           <GroupName>Hardware</GroupName>
           <Files>
+            <File>
+              <FileName>OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\OLED.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\OLED_Config.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_Font.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\OLED_Font.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_SPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\OLED_SPI.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_SPI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\OLED_SPI.h</FilePath>
+            </File>
             <File>
               <FileName>Serial.c</FileName>
               <FileType>1</FileType>

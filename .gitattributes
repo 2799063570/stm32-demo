@@ -5,8 +5,11 @@
 # Preserve the Windows line endings of the original vendor/template files.
 **/Start/** text eol=crlf
 **/Library/** text eol=crlf
+# Preserve official FreeRTOS bytes for upstream SHA256 verification.
+**/FreeRTOS/** -text
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.uvprojx text eol=crlf
 
 # Firmware and archives must never undergo text conversion.
 *.bin binary

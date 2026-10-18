@@ -6,6 +6,7 @@
 #include "Control.h"
 #include "Timer.h"
 #include "Command.h"
+#include "Dashboard.h"
 
 static char RxLine[64];
 static uint8_t RxLength, RxDiscard;
@@ -43,6 +44,7 @@ int main(void)
 	Encoder_Init();
 	Serial_Init();
 	Control_Init();
+	Dashboard_Init();
 	Timer_Init();
 	Serial_SendString("100Hz PID+FF; SPEED <integer RPM> / STOP / CLEAR / STATUS, end with CR or LF\r\n");
 	Serial_SendString("Send SPEED at least every 500ms; timeout=1000ms. Starts stopped.\r\n");
@@ -91,5 +93,6 @@ int main(void)
 				(long)Status.TargetRPM, (long)Status.RampRPM, (long)Status.SpeedRPM,
 				Status.PWM, Status.Running, Status.Fault);
 		}
+		Dashboard_Service();                        // 200ms绘制界面、分块SPI传输，控制仍由TIM2独立执行
 	}
 }

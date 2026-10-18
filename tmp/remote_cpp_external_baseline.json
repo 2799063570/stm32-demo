@@ -1,0 +1,14 @@
+{
+  "CMakeLists.txt": "7eeacf35663277aafc805562033cd38674a0e510fd57ac05ac4759325b7176b2",
+  "LICENSE": "9b2194d833ba348fc58cb2d6b7ef7ee8f3c61b703f2a0c674cf48c508cce1a63",
+  "package.xml": "7413a3b1bc63d27db3dc1450636e379dac2514c7e3d491f91b8284696120437e",
+  "README.md": "ff15c853429a36b08537eec96f98fb1db8c75c4bc7d722218722e4138c705a7e",
+  "setup.py": "67d8e16bce63b44855b684a05cd995127aec6c3d1fe93377c623a0dadd449615",
+  "launch/serial_bridge.launch": "1296c0fd42fd4eeaf659f17e54e2f6d6b58834e14eb5953804fd303e7cf9323f",
+  "scripts/serial_bridge_node.py": "6069b96708febccbf2fe4a1175eca3604b28d6c36e6d17a174d929bd70f41acd",
+  "scripts/serial_monitor.py": "b5755f49270c22eb557b36624f2c0cf57d26c0cde6e3daf6ee74e6b8bcc9656f",
+  "src/aubo_remote_bridge/core.py": "b3843cf887d56c0db7948d9b1907822e3cc8c8ec9ed9a4e90decf294d49c2039",
+  "src/aubo_remote_bridge/protocol.py": "5ff01fda053c3f135b253f8db7f6516285dec16ba5fdc4760cc60cbb610a934b",
+  "src/aubo_remote_bridge/transport.py": "4967f7bb04956010b7c02fcb9d4f99eff6d603967923a081a1f3d3aae960a776",
+  "src/aubo_remote_bridge/__init__.py": "c9ed86e467eac9acac504544e924deaad83a7661b5de8857f792293252e8ea04"
+}
