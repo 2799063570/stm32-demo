@@ -20,6 +20,13 @@ EXPECTED = [
     {},
     {'USART1_IRQHandler': (53, 'serial'), 'DMA1_Channel4_IRQHandler': (30, 'serial'),
      'DMA1_Channel5_IRQHandler': (31, 'serial')},
+    {},  # 第10项为裸机游戏，只使用公共SysTick，不新增外设ISR。
+    {'USART1_IRQHandler': (53, 'serial'), 'DMA1_Channel4_IRQHandler': (30, 'serial'),
+     'DMA1_Channel5_IRQHandler': (31, 'serial')},
+    {'TIM2_IRQHandler': (44, 'timer'), 'USART1_IRQHandler': (53, 'serial'),
+     'DMA1_Channel4_IRQHandler': (30, 'serial'), 'DMA1_Channel5_IRQHandler': (31, 'serial'),
+     'I2C1_EV_IRQHandler': (47, 'iic'), 'I2C1_ER_IRQHandler': (48, 'iic'),
+     'DMA1_Channel6_IRQHandler': (32, 'iic'), 'DMA1_Channel7_IRQHandler': (33, 'iic')},
 ]
 
 
@@ -93,8 +100,14 @@ def check(index, folder):
         assert location & 1 and 0x08000000 <= location < 0x08010000
         assert vector(slot) == location, f'Wrong vector binding: {name}'
     symbol(text, 'main', 'main')
-    symbol(text, 'OLED_Service', 'oled')
-    symbol(text, 'OLED_SPI_Write', 'oled_spi')
+    if (project / 'Hardware/OLED.c').is_file():
+        symbol(text, 'OLED_Service', 'oled')
+        symbol(text, 'OLED_SPI_Write', 'oled_spi')
+    if (project / 'System/RobotApp.c').is_file():
+        for name, owner in [('RobotApp_Service', 'robotapp'), ('RobotApp_Tick', 'robotapp'),
+                            ('RobotControl_Tick', 'robotcontrol'), ('Robot_ParseByte', 'robotprotocol'),
+                            ('IMU_Service', 'imu')]:
+            symbol(text, name, owner)
     if (project / 'System/Game.c').is_file():
         for name, owner in [('Game_Step', 'game'), ('GameView_Draw', 'gameview'),
                             ('StickInput_Feed', 'stickinput'), ('Joystick_Read', 'joystick')]:
@@ -102,6 +115,11 @@ def check(index, folder):
     if (project / 'System/RemoteLink.c').is_file():
         for name, owner in [('Remote_LinkFrame', 'remotelink'), ('Remote_ParseByte', 'remoteprotocol'),
                             ('Remote_InputFeed', 'remoteinput'), ('Joystick_Read', 'joystick')]:
+            symbol(text, name, owner)
+    if (project / 'System/JogRemote.c').is_file():
+        for name, owner in [('Jog_OnFrame', 'jogremote'), ('Jog_Feed', 'jogremote'),
+                            ('RemoteJog_EncodeInput', 'remotejogprotocol'), ('Remote_ParseByte', 'remoteprotocol'),
+                            ('JogKeys_Read', 'jogkeys'), ('Joystick_Read', 'joystick')]:
             symbol(text, name, owner)
     if rtos:
         for name, owner in [('vTaskStartScheduler', 'tasks'), ('xTaskCreate', 'tasks'),

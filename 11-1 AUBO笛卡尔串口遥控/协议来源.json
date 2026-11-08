@@ -1,0 +1,31 @@
+{
+  "source": "D:\\files\\code\\wheeltec_robot\\wheeltec_robot\\aubo\\aubo_remote_bridge",
+  "date": "2026-10-20",
+  "adaptation": "C源文件仅移除include中的aubo_remote_bridge/前缀；UTF-8 BOM",
+  "files": [
+    {
+      "source": "include\\aubo_remote_bridge\\RemoteProtocol.h",
+      "source_sha256": "7ab63aba6125f2d1c51d3e4325ecd912b31be446d08f7e6ec904a5528dbcd390",
+      "local": "System/RemoteProtocol.h",
+      "local_sha256": "7ab63aba6125f2d1c51d3e4325ecd912b31be446d08f7e6ec904a5528dbcd390"
+    },
+    {
+      "source": "include\\aubo_remote_bridge\\RemoteJogProtocol.h",
+      "source_sha256": "d2bd0cc20dbf1c38e3b41cd3f3e252bf075c31a1dbe4592091e66545cb941c71",
+      "local": "System/RemoteJogProtocol.h",
+      "local_sha256": "d2bd0cc20dbf1c38e3b41cd3f3e252bf075c31a1dbe4592091e66545cb941c71"
+    },
+    {
+      "source": "src\\RemoteProtocol.c",
+      "source_sha256": "e2f1373c4ebcf04cc3270d1d85cd4a4a08b194cb922183888455ca30337297c2",
+      "local": "System/RemoteProtocol.c",
+      "local_sha256": "d68703e1fc5639727ccb23058854e523f6f8ef0518c7514100dd7d09204b215f"
+    },
+    {
+      "source": "src\\RemoteJogProtocol.c",
+      "source_sha256": "56826fece2d0685e775b95e00f9f63afad4e6fe211d4dabe36668100a87ef5d7",
+      "local": "System/RemoteJogProtocol.c",
+      "local_sha256": "bef516b9eea3d8f32e54c66bd205a41127b9fcdc843c643e58acb7aaa9065720"
+    }
+  ]
+}

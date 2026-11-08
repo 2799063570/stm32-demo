@@ -157,9 +157,60 @@ static void TestLinkAndView(void)
 	Remote_View(&Input, &Link, 20); Snapshot("remote_done_oled.bin");
 }
 
+/* 交付的串口助手报文直接进入真实MCU解析器，不以Python解析通过代替固件验证。 */
+static unsigned AssistantPacket(const char *Name, Remote_LinkTypeDef *Link,
+	const Remote_InputTypeDef *Input, uint32_t Now)
+{
+	Remote_ParserTypeDef Parser;
+	Remote_FrameTypeDef Frame, Reply;
+	FILE *File = fopen(Name, "rb");
+	int Byte;
+	unsigned Replies = 0, Offset = 0;
+	assert(File);
+	Remote_ParserInit(&Parser);
+	while ((Byte = fgetc(File)) != EOF)
+	{
+		/* 115200下约每毫秒12字节，覆盖两帧粘连时的先后顺序。 */
+		if (Remote_ParseByte(&Parser, (uint8_t)Byte, &Frame))
+		{
+			if (Remote_LinkFrame(Link, &Frame, Input, Now + Offset / 12, &Reply))
+			{
+				assert(Reply.Type == REMOTE_INPUT && Reply.Sequence == 42 && Reply.Length == 18);
+				Replies ++;
+			}
+		}
+		Offset ++;
+	}
+	fclose(File);
+	assert(!Parser.Errors && !Parser.Used);
+	return Replies;
+}
+
+static void TestAssistantExamples(void)
+{
+	Remote_InputTypeDef Input;
+	Remote_LinkTypeDef Link;
+	Remote_InputInit(&Input); Remote_LinkInit(&Link);
+	Feed(&Input, 2048, 2048, 0, 32);
+	assert(AssistantPacket("assistant_poll.bin", &Link, &Input, 0) == 1);
+	assert(!Remote_LinkOnline(&Link, 10)); // 仅有POLL回复不能点亮PC:OK
+	for (uint32_t Now = 100; Now <= 400; Now += 100)
+	{
+		assert(AssistantPacket("assistant_demo.bin", &Link, &Input, Now) == 1);
+		assert(Remote_LinkOnline(&Link, Now + 5)); // 固定序号的手动循环在固件端允许
+		assert(Link.Source == REMOTE_SOURCE_DEMO && Link.JointMask == 63);
+		assert(Link.Joints[1] == 1571 && Link.Joints[2] == -1571 && Link.Joints[5] == 500);
+	}
+	assert(!Remote_LinkOnline(&Link, 1000)); // 停发后500ms失效
+	assert(AssistantPacket("assistant_home_done.bin", &Link, &Input, 1100) == 1);
+	assert(Link.AckId == 1 && Link.AckCommand == REMOTE_HOME && Link.AckState == REMOTE_SUCCEEDED);
+	assert(Link.Source == REMOTE_SOURCE_DEMO && Link.MotionState == REMOTE_SUCCEEDED);
+}
+
 int main(void)
 {
 	TestProtocol(); TestInput(); TestLinkAndView();
+	TestAssistantExamples();
 	puts("PASS: remote CRC/framing, proportional axes/calibration/button, session/timeout, OLED frames");
 	return 0;
 }

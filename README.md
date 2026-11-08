@@ -2,7 +2,7 @@
 
 已按你提供的 `STM32Project-有注释版` 重写。每个例程都是**独立 Keil 工程**，沿用 `Start / Library / User / System / Hardware / Objects / Listings` 目录、`Serial_Init()` / `Encoder_Get()` 这类命名、中文函数说明、花括号另起一行和分段初始化注释。
 
-## 九个工程
+## 十二个工程
 
 | 目录 | 实现内容 | 打开方式 |
 |---|---|---|
@@ -15,8 +15,11 @@
 | [7-1 FreeRTOS多任务+UART+OLED](<7-1 FreeRTOS多任务+UART+OLED/说明.md>) | 官方FreeRTOS V11.2.0、UART DMA任务通知、LED队列、OLED任务、资源诊断 | 同上 |
 | [8-1 摇杆OLED飞机避障](<8-1 摇杆OLED飞机避障/说明.md>) | 双轴ADC摇杆、按键消抖、飞机四向移动、随机障碍、碰撞/计分/暂停/重开 | 同上 |
 | [9-1 串口ROS双向遥控](<9-1 串口ROS双向遥控/说明.md>) | 摇杆输入、USART1 DMA双向协议、ROS Noetic接收桥、AUBO关节反馈OLED、超时处理 | 同上 |
+| [10-1 摇杆OLED飞机向上避障](<10-1 摇杆OLED飞机向上避障/说明.md>) | 机头朝上、障碍向下滚动、原接线、四向移动、计分/暂停/重开 | 同上 |
+| [11-1 AUBO笛卡尔串口遥控](<11-1 AUBO笛卡尔串口遥控/说明.md>) | 新笛卡尔协议、单摇杆XY/Z切换、自带按键按住点动、使能/HOME/取消、六轴与控制器反馈 | 同上 |
+| [12-1 ROS移动机器人下层控制器](<12-1 ROS移动机器人下层控制器/说明.md>) | 双轮编码器、MPU6050 DMA、48字节协议、1ms PID、超时减速/急停锁定、ROS1桥 | 同上 |
 
-**OLED使用SPI。** 第1～6项使用PB3 SCK、PB5 MOSI、PB0 CS、PB1 DC、PB12 RES。第7～9项按面包板方案改用普通GPIO软件SPI：**PB14 SCK、PB15 MOSI**，CS/DC/RES不变，避免调试引脚重映射；切换工程时注意这两根线。详见 [OLED接线与显示](docs/OLED接线与显示.md)。IIC例程仍用I2C2连接MPU6050，屏幕走独立SPI。
+**OLED使用SPI。** 第1～6项使用PB3 SCK、PB5 MOSI、PB0 CS、PB1 DC、PB12 RES。第7～11项按面包板方案改用普通GPIO软件SPI：**PB14 SCK、PB15 MOSI**，CS/DC/RES不变，避免调试引脚重映射；切换工程时注意这两根线。详见 [OLED接线与显示](docs/OLED接线与显示.md)。IIC例程仍用I2C2连接MPU6050，屏幕走独立SPI。
 
 你提供的“0.96寸 LTP03A JY”丝印尚无可靠控制器资料可核实；当前按**128×64、SSD1306兼容、四线SPI控制方式的七针模块**实现，兼容性仍需实板确认。若模块只引出四针IIC，不能仅改软件就变成SPI接口。
 
@@ -79,11 +82,17 @@ STATUS
 ## 构建与软件检查
 
 ```powershell
-# 批量重建九个工程（可通过 -UV4 指定自己的Keil路径）
+# 批量重建十二个工程（可通过 -UV4 指定自己的Keil路径）
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build_all.ps1
 
 # 检查Keil Target内存配置、HEX校验和、Flash/RAM范围及ISR强符号绑定
 python .\tools\check_projects.py
+
+# 第11项：新AUBO笛卡尔串口协议、授权/会话/XYZ/菜单回归
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test_jog_remote.ps1
+
+# 第11项：无需ROS，串口助手调试步骤、HEX/BIN与自动台架模拟
+# 见 11-1 AUBO笛卡尔串口遥控/串口助手调试.md
 
 # 内存配置回归：确保IROM误写成SRAM时被检查器拒绝
 python -m unittest discover -s tests -p test_project_memory.py
@@ -102,6 +111,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test_rtos_demo.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test_game.ps1
 python .\tools\render_game_preview.py
 
+# 向上飞新版：竖向碰撞/生成/计分、顶部计分栏保护及真实显存回归
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test_game_up.ps1
+python .\tools\render_game_up_preview.py
+
 # 串口遥控：真实C/Python协议互通、输入/会话/反馈、ROS消息适配回归
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\test_remote.ps1
 python .\tools\render_remote_preview.py
@@ -109,13 +122,13 @@ python .\tools\render_remote_preview.py
 # 从测试导出的真实页显存生成预览图（额外需要Pillow）
 python .\tools\render_oled_preview.py
 
-# 打包源码、说明、ROS1功能包和九份固件
+# 打包源码、说明、ROS1功能包和十份固件
 python .\tools\package.py
 ```
 
 `tools/make_projects.py` 用于业务文件有增删时重建工程分组，不会生成或覆盖业务 C 源码；已有工程的编译、调试、下载设置和文件级选项会保留。
 
-九个工程均已完成编译和固件结构检查；PID、命令、控制、OLED绘图、刷新逻辑、软件SPI位序、飞机游戏及串口遥控协议/输入/反馈逻辑已通过电脑端回归。**尚未进行实板烧录、物理串口/Noetic运行时验证、摇杆/ADC电气验证、FreeRTOS任务切换与栈余量测量、SPI/其他通信波形验证或实际电机调参。** 具体结果见 [验证记录](docs/验证记录.md)。
+十一个工程均已完成编译和固件结构检查；PID、命令、控制、OLED绘图、刷新逻辑、软件SPI位序、飞机游戏及串口遥控协议/输入/反馈逻辑已通过电脑端回归。**尚未进行实板烧录、物理串口/Noetic运行时验证、摇杆/ADC电气验证、FreeRTOS任务切换与栈余量测量、SPI/其他通信波形验证或实际电机调参。** 具体结果见 [验证记录](docs/验证记录.md)；第11项见 [笛卡尔遥控验证记录](<11-1 AUBO笛卡尔串口遥控/验证记录.md>)。
 
 ## 第七项：从多任务入门
 
@@ -137,6 +150,12 @@ python .\tools\package.py
 
 接线、烧录和运行步骤见 [第九项说明](<9-1 串口ROS双向遥控/说明.md>)，报文字段见 [串口遥控协议](docs/串口遥控协议.md)。基于现有AUBO i5源码的后续无线/运动适配设计见 [AUBO ROS1双向遥控方案](docs/AUBO_ROS1双向遥控方案.md)。
 
+## 第十项：飞机向上飞，接线不变
+
+新增独立工程 [10-1 摇杆OLED飞机向上避障](<10-1 摇杆OLED飞机向上避障/说明.md>)，保留第8项原版。飞机机头朝上、从下方中央出发，障碍从上往下滚动；上下左右移动，按下开始/暂停/继续/重开。摇杆仍为PA0/PA1/PA2，OLED仍为PB14/PB15/PB0/PB1/PB12，原接线不变；按用户确认只修正左右（X翻转1、Y保持原版1）；标题页可看采样/方向，游戏顶部暂显示Y/D/P排查顶边无法下移。烧录新目录的 `Objects/Project.hex` 即可体验。
+
+![向上飞版（真实显存测试场景，非实板截图）](docs/飞机向上避障预览.png)
+
 ## 资料与来源
 
 - 本机风格参考：`D:\files\嵌入式\STM32入门教程资料\程序源码\STM32Project-有注释版`。业务驱动为本次重写，未将原教程等待超时后仍继续事务的处理方式照搬。
@@ -147,3 +166,14 @@ python .\tools\package.py
 - [SSD1306控制器数据手册](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf)：四线SPI、DC/CS/RES、页显存及初始化。字模沿用参考资料的 `4-1 OLED显示屏/Hardware/OLED_Font.h`；显示调度和SPI驱动为本次重写。
 - [FreeRTOS Kernel V11.2.0官方发布](https://github.com/FreeRTOS/FreeRTOS-Kernel/releases/tag/V11.2.0)：第7项采用RVDS/ARM_CM3移植层和heap_4；来源与逐文件哈希见该工程FreeRTOS目录。
 - `Start`、`Library` 保留所复制厂商文件的版权/使用说明。`tools/TargetOption.xml` 仅复用已验证的 Keil 工程选项结构，最终路径全部指向各例程自身目录。
+
+## 第十二项：ROS移动机器人下层控制器
+
+新增独立裸机工程，接线与48字节协议见 [说明](<12-1 ROS移动机器人下层控制器/说明.md>)。
+TIM2每1ms运行双轮PID，USART1循环DMA接收，由HT/TC/IDLE通知main解析，反馈默认100Hz。
+通信超时200ms进入目标速度衰减，最多600ms后锁定停机；急停立即关闭PWM/STBY，释放不自动恢复。
+IMU使用PB8/PB9的I2C1与DMA6/7，避开USART1 DMA4/5。默认无OLED。
+
+- 主机回归：`powershell -NoProfile -ExecutionPolicy Bypass -File tools/test_robot.ps1`
+- 上位机适配：[ROS1 mobile_robot_bridge](ros1/mobile_robot_bridge/README.md)
+- 电脑验证：[第十二项验证记录](<12-1 ROS移动机器人下层控制器/验证记录.md>)

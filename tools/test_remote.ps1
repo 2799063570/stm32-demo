@@ -1,4 +1,4 @@
-param([string]$VCVars = 'D:\VisualStudio\VC\Auxiliary\Build\vcvars64.bat',
+﻿param([string]$VCVars = 'D:\VisualStudio\VC\Auxiliary\Build\vcvars64.bat',
       [string]$Python = 'C:\Users\zlab\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe')
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -6,6 +6,11 @@ $remoteRoot = (Get-ChildItem -LiteralPath $repoRoot -Directory | Where-Object { 
 $testRoot = Join-Path $repoRoot 'tests'
 $outputRoot = Join-Path $testRoot 'build'
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
+# 测试直接读取交付给串口助手的二进制文件，避免文档示例与协议代码脱节。
+$assistantRoot = Join-Path $remoteRoot '串口助手报文'
+Copy-Item -LiteralPath (Join-Path $assistantRoot '01_读取摇杆.bin') -Destination (Join-Path $outputRoot 'assistant_poll.bin')
+Copy-Item -LiteralPath (Join-Path $assistantRoot '02_模拟六关节反馈.bin') -Destination (Join-Path $outputRoot 'assistant_demo.bin')
+Copy-Item -LiteralPath (Join-Path $assistantRoot '03_HOME请求1完成.bin') -Destination (Join-Path $outputRoot 'assistant_home_done.bin')
 if (-not (Test-Path -LiteralPath $VCVars)) { throw 'Pass vcvars64.bat with -VCVars.' }
 $argsText = '/nologo /utf-8 /std:c11 /W4 /WX /D_CRT_SECURE_NO_WARNINGS '
 foreach ($include in @((Join-Path $testRoot 'mock'), (Join-Path $remoteRoot 'Hardware'),

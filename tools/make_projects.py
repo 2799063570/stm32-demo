@@ -15,6 +15,9 @@ PROJECTS = [
     ('7-1 FreeRTOS多任务+UART+OLED', 'FREERTOS_UART_OLED', ['rcc', 'gpio', 'usart', 'dma']),
     ('8-1 摇杆OLED飞机避障', 'JOYSTICK_PLANE_GAME', ['rcc', 'gpio', 'adc']),
     ('9-1 串口ROS双向遥控', 'SERIAL_ROS_REMOTE', ['rcc', 'gpio', 'adc', 'usart', 'dma']),
+    ('10-1 摇杆OLED飞机向上避障', 'JOYSTICK_PLANE_UP_GAME', ['rcc', 'gpio', 'adc']),
+    ('11-1 AUBO笛卡尔串口遥控', 'AUBO_CARTESIAN_REMOTE', ['rcc', 'gpio', 'adc', 'usart', 'dma']),
+    ('12-1 ROS移动机器人下层控制器', 'ROS_MOBILE_CONTROLLER', ['rcc', 'gpio', 'usart', 'dma', 'tim', 'i2c']),
 ]
 
 # Target页使用OCR_RVCT4/9；仅修改Cpu和IROM/IRAM不会同步这两组字段。
