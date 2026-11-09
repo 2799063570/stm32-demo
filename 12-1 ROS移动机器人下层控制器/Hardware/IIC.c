@@ -111,7 +111,7 @@ void IIC_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
 	NVIC_Init(&NVIC_InitStructure);
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannel = I2C1_EV_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = I2C1_EV_IRQn;//I2C 事件处理
 	NVIC_Init(&NVIC_InitStructure);
 	IIC_State = IIC_IDLE;
 }

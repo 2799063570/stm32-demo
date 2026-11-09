@@ -84,7 +84,7 @@ void Serial_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel4_IRQn;
 	NVIC_Init(&NVIC_InitStructure);
 	USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
-	USART_ITConfig(USART1, USART_IT_ERR, ENABLE);
+	USART_ITConfig(USART1, USART_IT_ERR, ENABLE);// 串口错误中断 帧格式、噪声、接收溢出
 	USART_DMACmd(USART1, USART_DMAReq_Rx | USART_DMAReq_Tx, ENABLE);
 	DMA_Cmd(DMA1_Channel5, ENABLE);
 	USART_Cmd(USART1, ENABLE);
@@ -223,8 +223,8 @@ void USART1_IRQHandler(void)
 	uint32_t Status = USART1->SR;
 	if (Status & (USART_SR_IDLE | USART_SR_ORE | USART_SR_FE | USART_SR_NE))
 	{
-		volatile uint32_t Temp = USART1->DR;
-		(void)Temp;
+		volatile uint32_t Temp = USART1->DR;// 读取SR再读取DR会自动清除对应的标志位
+		(void)Temp;// 表示有意不使用读取的结果，也可避免未使用变量的编译警告
 		if (Status & (USART_SR_ORE | USART_SR_FE | USART_SR_NE))
 		{
 			Serial_Error++;

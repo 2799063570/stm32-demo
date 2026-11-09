@@ -16,40 +16,35 @@ void NMI_Handler(void)
 {
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		;
+	while (1);
 }
 
 void HardFault_Handler(void)
 {
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		;
+	while (1);
 }
 
 void MemManage_Handler(void)
 {
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		;
+	while (1);
 }
 
 void BusFault_Handler(void)
 {
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		;
+	while (1);
 }
 
 void UsageFault_Handler(void)
 {
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		;
+	while (1);
 }
 
 void SVC_Handler(void)
@@ -71,6 +66,5 @@ void assert_failed(uint8_t *File, uint32_t Line)
 	__disable_irq();
 	__disable_irq();
 	Motor_Stop();
-	while (1)
-		; // 在此处观察File和Line定位非法参数
+	while (1); // 在此处观察File和Line定位非法参数
 }
